@@ -3,6 +3,7 @@ const { connection } = require("./config/db")
 const { categoryRouter } = require("./route/category.route")
 require("dotenv").config()
 const {userRouter}=require("./route/user.route")
+const { productRouter } = require("./route/product.route")
 const app=express()
 
 app.use(express.json())
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.use("/user",userRouter)
 app.use("/ctg",categoryRouter)
+app.use("/product",productRouter)
 
 app.listen(process.env.port,async(req,res)=>{
     try {
