@@ -1,23 +1,15 @@
 {
-  "name": "triveous-ecommerce-api-with-node",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server":"nodemon index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Rohit2216/Triveous-Ecommerce-API-with-Node-js.git"
+    "server": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Rohit2216/Triveous-Ecommerce-API-with-Node-js/issues"
-  },
-  "homepage": "https://github.com/Rohit2216/Triveous-Ecommerce-API-with-Node-js#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

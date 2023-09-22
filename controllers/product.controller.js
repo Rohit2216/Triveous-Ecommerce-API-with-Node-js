@@ -1,93 +1,63 @@
-const { Product } = require("../models/product.model");
+const { productModel } = require("../models/product.model")
 
-// Assuming you have the Category and User models defined in your Mongoose application
-const Category = require("../models/category.model");
-const User = require("../models/user.model");
+// Add product
+const addProduct = async (req, res) => {
+    const { title, price, description, availability, category } = req.body
 
-async function fetchingProducts(req, res) {
     try {
-        const { id, title, availability, category } = req.query;
-
-        const query = {}; // Initialize an empty query object
-
-        if (id) {
-            query._id = id;
-        }
-        if (title) {
-            query.title = title;
-        }
-        if (availability) {
-            query.availability = availability;
-        }
-        if (category) {
-            const categoryObj = await Category.findOne({ name: category });
-            if (categoryObj) {
-                query.categoryID = categoryObj._id;
-            }
-        }
-
-        const product = await Product.findOne(query).populate("categoryID", "name");
-
-        if (product) {
-            return res.status(200).json({
-                status: true,
-                data: product
-            });
-        } else {
-            return res.status(404).json({
-                status: false,
-                message: "Product not found"
-            });
-        }
+        let newProduct = new productModel({ title, price, description, availability, category })
+        await newProduct.save()
+        return res.status(200).send({ "msg": "Product added!" })
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: error.message
-        });
+        return res.status(400).send({ "msg": error.message })
     }
 }
 
-async function addingProducts(req, res) {
+// Get all products
+const getAllProducts = async (req, res) => {
     try {
-        const { title, price, description, availability, category } = req.body;
-
-        // Assuming you have a user object associated with the request, e.g., req.user
-        const user = req.user;
-
-        // Find the category by name
-        const categoryObj = await Category.findOne({ name: category });
-
-        if (!categoryObj) {
-            return res.status(400).json({
-                status: false,
-                message: "Category not found"
-            });
-        }
-
-        const product = new Product({
-            title,
-            price,
-            description,
-            availability,
-            categoryID: categoryObj._id,
-            sellerID: user._id
-        });
-
-        await product.save();
-
-        return res.status(200).json({
-            status: true,
-            data: product
-        });
+        const products = await productModel.find();
+        res.json(products);
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: error.message
-        });
+        console.error('Error fetching all products:', error);
+        res.status(500).json({ message: 'Internal server error.' });
     }
-}
-
-module.exports = {
-    fetchingProducts,
-    addingProducts
 };
+
+// Get products by category
+const getProductsByCategory = async (req, res) => {
+    try {
+        const { category } = req.params;
+        const products = await productModel.find({ category });
+        res.json(products);
+    } catch (error) {
+        console.error('Error fetching products by category:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+};
+
+// Get product by ID
+const getProductById = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const product = await productModel.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found.' });
+        }
+
+        res.json(product);
+    } catch (error) {
+        console.error('Error fetching product by ID:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+};
+
+
+module.exports={
+    getAllProducts,
+    getProductsByCategory,
+    getProductById,
+    addProduct
+
+}

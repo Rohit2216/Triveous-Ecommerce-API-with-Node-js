@@ -1,88 +1,69 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { User } = require("../models/user.model");
-require("dotenv").config();
+const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
-// Function to register a new user
-const registerUser = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+const { userModel } = require("../models/user.model")
+const { blacklistModel } = require("../models/blacklist.model")
 
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already registered" });
+
+const register = async (req, res) => {
+    const { name, email, password, role } = req.body
+    try {
+        const user = await userModel.findOne({ email })
+
+        if (user) {
+            res.status(400).send({ "msg": "User already exist!" })
+        } else {
+            bcrypt.hash(password, 3).then(async (hash) => {
+                const user = new userModel({ name, email, password: hash, role })
+                await user.save()
+                res.status(200).send({ "msg": "Registeration completed!" })
+            });
+        }
+    } catch (error) {
+        res.status(400).send({ "msg": error.message })
     }
+}
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-    });
 
-    await newUser.save();
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to log in a user
-const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(401).json({ message: "Login failed: User not found" });
+const login = async (req, res) => {
+    const { email, password } = req.body
+    try {
+        const user = await userModel.findOne({ email })
+        if (user) {
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (result) {
+                    const token = jwt.sign({ userId: user._id, role: user.role, email: user.email }, process.env.secret_key, { expiresIn: '3h' });
+                    res.status(200).send({ "msg": "Sign In Successfully!", token, userID: user._id })
+                } else {
+                    res.status(400).send({ "msg": "Incorrect Password" })
+                }
+            });
+        } else {
+            res.status(404).send({ "msg": "No user found with given email" })
+        }
+    } catch (error) {
+        res.status(400).send({ "msg": error.message })
     }
+}
 
-    if (!user.password) {
-      return res
-        .status(500)
-        .json({ message: "Server error: Hashed password not found" });
+
+
+const logout = async (req, res) => {
+    const { token } = req.params;
+    console.log(token)
+    try {
+        let newBlacklistToken = new blacklistModel({ token: token });
+        await newBlacklistToken.save();
+        return res.send({ "msg": "Logout successful" });
+    } catch (error) {
+        res.status(400).send({ "msg": error.message });
     }
+}
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-      return res
-        .status(401)
-        .json({ message: "Login failed: Incorrect password" });
-    }
-
-    const token = jwt.sign({ userId: user._id }, process.env.reg_secret, {
-      expiresIn: "1h",
-    });
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-// Function to get all users
-const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-
-    if (!users || users.length === 0) {
-      return res.status(404).json({ message: "No users found" });
-    }
-
-    res.status(200).json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-module.exports = {
-  registerUser,
-  loginUser,
-  getAllUsers,
-};
+module.exports={
+    login,
+    register,
+    logout
+}
