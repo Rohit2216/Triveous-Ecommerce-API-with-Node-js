@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
         {
             product: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'product', // Reference to the Product model
+                ref: 'product', 
                 required: true,
             },
             quantity: {
@@ -33,10 +33,13 @@ const userSchema = mongoose.Schema({
         default: "user"
 
     }
-}, {
+},
+{
     versionKey: false
 })
 
 const userModel = mongoose.model("user", userSchema)
 
-module.exports = { userModel }
+module.exports = { 
+    userModel
+}
