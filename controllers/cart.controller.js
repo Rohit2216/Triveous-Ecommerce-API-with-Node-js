@@ -36,7 +36,9 @@ const additem = async (req, res) => {
     }
 };
 
+
 // Route for getting the user's cart
+
 const getcart = async (req, res) => {
     try {
         const { userId } = req.body;
@@ -69,14 +71,14 @@ const getcart = async (req, res) => {
 
 
 // Route for deleting a product from the user's cart or clearing the entire cart
+
 const deleteitem = async (req, res) => {
     let id = req.params.id;
     const userId = req.body.userId;
 
     if (id) {
         try {
-            // Remove a specific product from the user's cart
-            const user = await userModel.findByIdAndUpdate(
+                const user = await userModel.findByIdAndUpdate(
                 userId,
                 { $pull: { cart: { product: id } } },
                 { new: true }
@@ -92,7 +94,6 @@ const deleteitem = async (req, res) => {
         }
     } else {
         try {
-            // Clear the entire cart
             const user = await userModel.findByIdAndUpdate(
                 userId,
                 { $pull: { mycart: [] } },
@@ -107,14 +108,18 @@ const deleteitem = async (req, res) => {
 
 
 // Update the quantity of a product in the user's cart
+
 const updateCartItemQuantity = async (req, res) => {
     try {
         const { userId, productId, quantity } = req.body;
 
         // Find the user by ID
         const user = await userModel.findOneAndUpdate(
-            { _id: userId, 'cart.product': productId }, // Find the user and the specific cart item by product ID
-            { $set: { 'cart.$.quantity': quantity } }, // Update the quantity of the specific cart item
+            // Find the user and the specific cart item by product ID
+            { _id: userId, 'cart.product': productId }, 
+
+             // Update the quantity of the specific cart item
+            { $set: { 'cart.$.quantity': quantity } },
             { new: true }
         );
 

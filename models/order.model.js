@@ -33,4 +33,6 @@ const orderSchema = mongoose.Schema({
 
 const orderModel = mongoose.model("order", orderSchema)
 
-module.exports = { orderModel }
+module.exports = { 
+    orderModel
+}
