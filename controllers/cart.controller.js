@@ -106,29 +106,6 @@ const deleteitem = async (req, res) => {
 };
 
 
-// const deleteitem = async (req, res) => {
-//     try {
-//         const { userId, productId } = req.body;
-
-//         // Find the user by ID and update the cart to remove the specific product
-//         const user = await userModel.findOneAndUpdate(
-//             { _id: userId },
-//             { $pull: { cart: { product: productId } } },
-//             { new: true }
-//         );
-
-//         if (!user) {
-//             return res.status(404).json({ error: 'User not found' });
-//         }
-
-//         res.status(200).json({ message: 'Cart item deleted successfully' });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// };
-
-
 // Update the quantity of a product in the user's cart
 const updateCartItemQuantity = async (req, res) => {
     try {
