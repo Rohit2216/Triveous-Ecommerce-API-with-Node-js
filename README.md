@@ -1,5 +1,5 @@
 
-# Triveous-Ecommerce-API-with-Node-js
+# Ecommerce-API-with-Node-js
 
 
 The E-commerce API is built using Node.js and Express.js, with MongoDB as the database. This API provides various features for managing categories and products, user carts, placing orders, and user authentication using JWT tokens. It includes essential security measures such as authentication middleware and error handling.
