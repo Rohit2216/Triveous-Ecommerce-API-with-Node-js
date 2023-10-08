@@ -36,7 +36,8 @@ const additem = async (req, res) => {
     }
 };
 
-// Route for getting the user's cart
+
+
 const getcart = async (req, res) => {
     try {
         const { userId } = req.body;
@@ -69,6 +70,7 @@ const getcart = async (req, res) => {
 
 
 // Route for deleting a product from the user's cart or clearing the entire cart
+
 const deleteitem = async (req, res) => {
     let id = req.params.id;
     const userId = req.body.userId;
@@ -104,6 +106,8 @@ const deleteitem = async (req, res) => {
         }
     }
 };
+
+
 
 
 // Update the quantity of a product in the user's cart

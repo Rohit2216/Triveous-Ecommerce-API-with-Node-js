@@ -1,5 +1,7 @@
 const { productModel } = require("../models/product.model")
 
+
+
 // Add product
 const addProduct = async (req, res) => {
     const { title, price, description, availability, category } = req.body
@@ -14,6 +16,7 @@ const addProduct = async (req, res) => {
 }
 
 // Get all products
+
 const getAllProducts = async (req, res) => {
     try {
         const products = await productModel.find();
@@ -25,6 +28,9 @@ const getAllProducts = async (req, res) => {
 };
 
 // Get products by category
+
+
+
 const getProductsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
@@ -36,7 +42,8 @@ const getProductsByCategory = async (req, res) => {
     }
 };
 
-// Get product by ID
+
+
 const getProductById = async (req, res) => {
     try {
         const { productId } = req.params;

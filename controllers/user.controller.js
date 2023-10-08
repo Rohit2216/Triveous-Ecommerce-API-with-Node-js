@@ -2,8 +2,10 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 const { userModel } = require("../models/user.model")
+const { userRouter } = require("../routes/user.route")
 
 // user and  admin can be register 
+
 
 const register = async (req, res) => {
     const { name, email, password, role } = req.body
@@ -24,8 +26,6 @@ const register = async (req, res) => {
     }
 }
 
-
-// user and admin login to here
 
 const login = async (req, res) => {
     const { email, password } = req.body

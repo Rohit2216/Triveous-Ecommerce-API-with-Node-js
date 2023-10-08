@@ -1,6 +1,8 @@
 const express = require("express")
 require("dotenv").config()
 const { connection } = require("./configs/db")
+const swaggerUi = require('swagger-ui-express');
+const { swaggerSpec } = require('./configs/swagger')
 
 const cors = require("cors")
 
@@ -25,6 +27,9 @@ app.use("/product", productRouter)
 app.use("/cart", cartRouter)
 app.use("/order", orderRouter)
 app.use("/category", categoryRouter)
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.listen(process.env.port, async() => {

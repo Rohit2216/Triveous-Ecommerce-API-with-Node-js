@@ -1,6 +1,10 @@
 const { orderModel } = require("../models/order.model")
 const { userModel } = require("../models/user.model")
 
+
+
+
+
 const placeOrder = async (req, res) => {
     const { userId, email } = req.body
     try {
@@ -37,6 +41,10 @@ const placeOrder = async (req, res) => {
     }
 }
 
+
+
+
+
 const getOrder = async (req, res) => {
     try {
         const { email } = req.body;
@@ -61,6 +69,7 @@ const getOrder = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 
 const getOrderById = async (req, res) => {
     try {
