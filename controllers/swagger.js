@@ -121,7 +121,7 @@
  * @swagger
  * /product/addproduct:
  *   post:
- *     summary: Add a new product
+ *     summary: Add a new product by Admin
  *     tags: [Product]
  *     security:
  *       - BearerAuth: []
